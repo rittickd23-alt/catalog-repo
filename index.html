@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMPEdge Solution - Electrical Service Quotation System</title>
-    <meta name="description" content="Professional electrical service quotation and BOM generator by AMPEdge Solution. Powering the Edge of Tomorrow.">
+    <title>AmpEdge Solutions - Electrical Service Quotation System</title>
+    <meta name="description" content="Professional electrical service quotation and BOM generator for residential, commercial and industrial projects by AmpEdge Solutions.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -18,7 +18,11 @@
         <div class="landing-container">
             <div class="landing-header">
                 <div class="logo-big">
-                    <img src="logo.png" alt="AMPEdge Solution Logo" class="logo-img-big">
+                    <span class="logo-icon"><i class="fa-solid fa-bolt-lightning"></i></span>
+                    <div>
+                        <h1 class="logo-title">AmpEdge Solutions</h1>
+                        <p class="logo-sub">Powering Every Connection with Precision</p>
+                    </div>
                 </div>
                 <p class="landing-desc">Select your project type below to generate a professional electrical service quotation instantly.</p>
             </div>
@@ -75,7 +79,7 @@
             </div>
 
             <div class="landing-footer">
-                <p>&copy; 2026 AMPEdge Solution | Powering the Edge of Tomorrow.</p>
+                <p>&copy; 2026 AmpEdge Solutions | Electrical Contracting & Engineering Division</p>
             </div>
         </div>
     </div>
@@ -84,60 +88,68 @@
     <div id="step-2" class="step">
         <div class="config-container">
             <div class="config-topbar">
-                <button class="back-btn" onclick="goToStep(1)"><i class="fa-solid fa-arrow-left"></i> Back</button>
-                <div class="topbar-logo">
-                    <img src="logo.png" alt="AMPEdge" class="topbar-logo-img">
-                </div>
+                <button class="back-btn" onclick="goToStep(1)"><i class="fa-solid fa-arrow-left"></i> Back to Categories</button>
                 <div class="selected-category-badge" id="selected-badge">
                     <i class="fa-solid fa-house"></i> <span id="badge-text">Independent House</span>
                 </div>
             </div>
 
-            <!-- Client Info -->
+            <!-- Client Info Section -->
             <div class="config-section">
                 <h2 class="config-section-title"><i class="fa-solid fa-user-tie"></i> Client & Project Details</h2>
                 <div class="client-form-grid">
-                    <div class="form-field"><label>Client Name</label><input type="text" id="inp-client" value="Sun Construction" placeholder="Enter client name"></div>
-                    <div class="form-field"><label>Project Title</label><input type="text" id="inp-project" value="G+4 Residential Apartment" placeholder="Enter project name"></div>
-                    <div class="form-field"><label>Site Address</label><input type="text" id="inp-address" value="Howrah, West Bengal" placeholder="Enter site location"></div>
-                    <div class="form-field"><label>Quotation Number</label><input type="text" id="inp-quoteno" value="AE/QT/2026/089" placeholder="e.g. AE/QT/2026/089"></div>
-                    <div class="form-field"><label>Date</label><input type="date" id="inp-date"></div>
-                    <div class="form-field"><label>Number of Units / Flats</label><input type="number" id="inp-units" value="1" min="1"></div>
+                    <div class="form-field">
+                        <label>Client Name</label>
+                        <input type="text" id="inp-client" value="Sun Construction" placeholder="Enter client name">
+                    </div>
+                    <div class="form-field">
+                        <label>Project Title</label>
+                        <input type="text" id="inp-project" value="G+4 Residential Apartment" placeholder="Enter project name">
+                    </div>
+                    <div class="form-field">
+                        <label>Site Address</label>
+                        <input type="text" id="inp-address" value="Howrah, West Bengal" placeholder="Enter site location">
+                    </div>
+                    <div class="form-field">
+                        <label>Quotation Number</label>
+                        <input type="text" id="inp-quoteno" value="AE/QT/2026/089" placeholder="e.g. AE/QT/2026/089">
+                    </div>
+                    <div class="form-field">
+                        <label>Date</label>
+                        <input type="date" id="inp-date">
+                    </div>
+                    <div class="form-field">
+                        <label>Number of Units (Multiplier)</label>
+                        <input type="number" id="inp-units" value="1" min="1">
+                    </div>
                 </div>
             </div>
 
-            <!-- Baseline Points -->
+            <!-- Points Configuration -->
             <div class="config-section">
-                <h2 class="config-section-title"><i class="fa-solid fa-square-check" style="color:#0369a1"></i> Promoter Baseline Scope <span class="hint">(Standard wiring provided by promoter/builder)</span></h2>
+                <h2 class="config-section-title"><i class="fa-solid fa-list-check"></i> Electrical Point Schedule <span class="hint">(Enter Quantity for each item)</span></h2>
                 <div class="points-table-wrapper">
-                    <table class="config-points-table" id="baseline-table">
-                        <thead><tr><th style="width:35px">#</th><th>Location & Point Type</th><th style="width:70px">QTY</th></tr></thead>
-                        <tbody id="baseline-tbody"></tbody>
-                        <tfoot><tr class="total-row"><td></td><td class="text-right font-bold">Subtotal Baseline Points / Unit:</td><td class="text-center font-bold font-mono" id="baseline-subtotal">0</td></tr></tfoot>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Recommended Points -->
-            <div class="config-section">
-                <h2 class="config-section-title"><i class="fa-solid fa-star" style="color:#f59e0b"></i> AMPEdge Recommended Scope <span class="hint">(Value-add safety & convenience items)</span></h2>
-                <div class="points-table-wrapper">
-                    <table class="config-points-table" id="recommended-table">
-                        <thead><tr><th style="width:35px">#</th><th>Location & Safety / Value-Add Item</th><th style="width:70px">QTY</th></tr></thead>
-                        <tbody id="recommended-tbody"></tbody>
-                        <tfoot><tr class="total-row"><td></td><td class="text-right font-bold">Subtotal Recommended Points / Unit:</td><td class="text-center font-bold font-mono" id="recommended-subtotal">0</td></tr></tfoot>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Rates / BOQ -->
-            <div class="config-section">
-                <h2 class="config-section-title"><i class="fa-solid fa-indian-rupee-sign"></i> Unit Rates & BOQ <span class="hint">(Edit rates as needed — amounts auto-calculate)</span></h2>
-                <div class="points-table-wrapper">
-                    <table class="config-points-table" id="boq-table">
-                        <thead><tr><th style="width:35px">#</th><th>Description of Work</th><th style="width:65px">Unit</th><th style="width:90px">Rate (₹)</th><th style="width:80px">Total QTY</th><th style="width:110px">Amount (₹)</th></tr></thead>
-                        <tbody id="boq-tbody"></tbody>
-                        <tfoot><tr class="total-row grand"><td colspan="4"></td><td class="text-right font-bold">TOTAL:</td><td class="text-right font-bold font-mono" id="boq-grand-total">₹0.00</td></tr></tfoot>
+                    <table class="config-points-table" id="points-table">
+                        <thead>
+                            <tr>
+                                <th style="width:40px">#</th>
+                                <th>Point Description</th>
+                                <th style="width:80px">Unit</th>
+                                <th style="width:100px">Rate (₹)</th>
+                                <th style="width:90px">Quantity</th>
+                                <th style="width:120px">Amount (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="points-tbody">
+                            <!-- Dynamically populated -->
+                        </tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <td colspan="4"></td>
+                                <td class="text-right font-bold">TOTAL:</td>
+                                <td class="text-right font-bold font-mono" id="config-total">₹0.00</td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -145,7 +157,7 @@
             <!-- Generate Button -->
             <div class="generate-section">
                 <button class="generate-btn" onclick="generateQuotation()">
-                    <i class="fa-solid fa-file-invoice"></i> Generate Quotation Preview
+                    <i class="fa-solid fa-file-invoice"></i> Generate Quotation
                     <span class="key-hint">Enter ↵</span>
                 </button>
             </div>
@@ -155,8 +167,7 @@
     <!-- ===== STEP 3: PDF PREVIEW & DOWNLOAD ===== -->
     <div id="step-3" class="step">
         <div class="preview-topbar">
-            <button class="back-btn" onclick="goToStep(2)"><i class="fa-solid fa-arrow-left"></i> Back to Edit</button>
-            <div class="topbar-logo"><img src="logo.png" alt="AMPEdge" class="topbar-logo-img"></div>
+            <button class="back-btn" onclick="goToStep(2)"><i class="fa-solid fa-arrow-left"></i> Back to Configuration</button>
             <div class="preview-actions">
                 <button class="action-btn edit-btn" onclick="goToStep(2)"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
                 <button class="action-btn print-btn" onclick="window.print()"><i class="fa-solid fa-print"></i> Print</button>
@@ -165,8 +176,116 @@
         </div>
 
         <div class="preview-scroll-area">
-            <!-- PDF document container — pages generated dynamically by JS -->
-            <div id="pdf-document" class="pdf-document"></div>
+            <div id="pdf-document" class="pdf-document">
+
+                <!-- PAGE 1: COVER -->
+                <div class="pdf-page page-cover">
+                    <div class="pdf-brand-header">
+                        <div>
+                            <h1 class="pdf-brand-title">AmpEdge Solutions</h1>
+                            <p class="pdf-brand-tagline">Powering Every Connection with Precision</p>
+                        </div>
+                        <span class="pdf-doc-badge">COMMERCIAL PROPOSAL</span>
+                    </div>
+                    <div class="pdf-cover-body">
+                        <div class="pdf-cover-title-block">
+                            <h2>ELECTRICAL WIRING LABOUR SERVICE & BOQ PROPOSAL</h2>
+                            <p>Detailed point allocation schedule, commercial assessment and Terms of Agreement</p>
+                        </div>
+                        <div class="pdf-meta-grid">
+                            <div class="pdf-meta-card"><span class="pdf-meta-label">PREPARED FOR</span><span class="pdf-meta-value highlight" id="pdf-client">Sun Construction</span></div>
+                            <div class="pdf-meta-card"><span class="pdf-meta-label">PROJECT NAME</span><span class="pdf-meta-value" id="pdf-project">G+4 Residential Apartment</span></div>
+                            <div class="pdf-meta-card"><span class="pdf-meta-label">SITE ADDRESS</span><span class="pdf-meta-value" id="pdf-address">Howrah, West Bengal</span></div>
+                            <div class="pdf-meta-card"><span class="pdf-meta-label">QUOTATION NO.</span><span class="pdf-meta-value mono" id="pdf-quoteno">AE/QT/2026/089</span></div>
+                            <div class="pdf-meta-card"><span class="pdf-meta-label">DATE OF ISSUE</span><span class="pdf-meta-value" id="pdf-date">July 31, 2026</span></div>
+                            <div class="pdf-meta-card"><span class="pdf-meta-label">TOTAL UNITS</span><span class="pdf-meta-value" id="pdf-units">1 Unit</span></div>
+                        </div>
+                        <div class="pdf-summary-box">
+                            <h3>1. Executive Summary</h3>
+                            <p>AmpEdge Solutions is pleased to submit this proposal for the complete electrical point wiring and installation labour for the upcoming construction project. Our proposed model ensures strict compliance with IS 732, IS 3043, and National Electrical Code guidelines, high quality workmanship, and transparent billing.</p>
+                        </div>
+                    </div>
+                    <div class="pdf-page-footer"><span>AmpEdge Solutions | Powering Every Connection with Precision</span><span>Page 1 of 3</span></div>
+                </div>
+
+                <!-- PAGE 2: BOQ TABLE -->
+                <div class="pdf-page page-boq">
+                    <div class="pdf-section-strip"><h2>2. DETAILED BILL OF QUANTITIES (BOQ) & COMMERCIAL SCHEDULE</h2></div>
+                    <table class="pdf-boq-table">
+                        <thead>
+                            <tr>
+                                <th style="width:40px">ITEM</th>
+                                <th>DESCRIPTION OF WORK</th>
+                                <th class="text-center" style="width:70px">UNIT</th>
+                                <th class="text-right" style="width:80px">RATE (₹)</th>
+                                <th class="text-center" style="width:80px">QTY</th>
+                                <th class="text-right" style="width:110px">AMOUNT (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pdf-boq-tbody">
+                            <!-- Dynamically populated -->
+                        </tbody>
+                    </table>
+                    <div class="pdf-grand-total-banner">
+                        <span>GRAND TOTAL CONFIRMED LABOUR COST:</span>
+                        <span class="pdf-grand-value" id="pdf-grand-total">₹0.00</span>
+                    </div>
+                    <div class="pdf-page-footer"><span>AmpEdge Solutions | Powering Every Connection with Precision</span><span>Page 2 of 3</span></div>
+                </div>
+
+                <!-- PAGE 3: TERMS & SIGNATURES -->
+                <div class="pdf-page page-terms">
+                    <div class="pdf-section-strip"><h2>3. COMMERCIAL TERMS, INCLUSIONS & PAYMENT SCHEDULE</h2></div>
+                    <div class="pdf-terms-grid">
+                        <div class="pdf-terms-card">
+                            <h3><i class="fa-solid fa-list-ul"></i> SCOPE CONDITIONS & STANDARD INCLUSIONS</h3>
+                            <ul>
+                                <li><strong>Labour Charges Only:</strong> Quoted pricing covers complete installation labour. Electrical materials (wires, conduits, switches, DBs) to be supplied by client or quoted separately.</li>
+                                <li><strong>Free CAD Layout Consultation:</strong> Electrical drawing & layout consultation provided <strong>FREE OF COST</strong> upon project award.</li>
+                                <li><strong>BOQ & Load Design:</strong> Detailed BOQ preparation and phase-balancing circuit design included.</li>
+                                <li><strong>Testing & Commissioning:</strong> Megger insulation testing, continuity testing, and system commissioning included.</li>
+                                <li><strong>DB Labeling:</strong> Circuit identification ferrule numbering and DB dressing included.</li>
+                                <li><strong>Standards Compliance:</strong> Work complies strictly with IS 732, IS 3043, and National Electrical Code guidelines.</li>
+                                <li><strong>Workmanship Warranty:</strong> 12-Month comprehensive warranty on installation workmanship.</li>
+                                <li><strong>Statutory Taxes:</strong> GST extra as applicable.</li>
+                            </ul>
+                        </div>
+                        <div class="pdf-terms-card">
+                            <h3><i class="fa-solid fa-receipt"></i> PAYMENT SCHEDULE & VALIDITY</h3>
+                            <table class="pdf-payment-table">
+                                <thead><tr><th>Milestone</th><th class="text-right">%</th><th class="text-right">Amount</th></tr></thead>
+                                <tbody>
+                                    <tr><td><strong>1. Advance Mobilization</strong><br><small>30% of contract</small></td><td class="text-right">30%</td><td class="text-right font-mono" id="pdf-ms1">₹0</td></tr>
+                                    <tr><td><strong>2. Running Progress</strong><br><small>Piping & wire pulling</small></td><td class="text-right">40%</td><td class="text-right font-mono" id="pdf-ms2">₹0</td></tr>
+                                    <tr><td><strong>3. Testing & Handover</strong><br><small>Final testing & DB</small></td><td class="text-right">30%</td><td class="text-right font-mono" id="pdf-ms3">₹0</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="pdf-validity-box"><strong>Proposal Validity:</strong> 30 Days from date of issue (Valid until <span id="pdf-validity">—</span>).</div>
+                        </div>
+                    </div>
+
+                    <div class="pdf-section-strip sig-strip"><h2>4. ACCEPTANCE & WORK ORDER AUTHORIZATION</h2></div>
+                    <div class="pdf-sig-grid">
+                        <div class="pdf-sig-card">
+                            <h4>PREPARED & ISSUED BY</h4>
+                            <p class="sig-company">AmpEdge Solutions</p>
+                            <p class="sig-dept">Electrical Contracting & Engineering Division</p>
+                            <div class="sig-stamp">[ Digitally Signed & Approved ]</div>
+                            <div class="sig-line"></div>
+                            <p class="sig-detail"><strong>Authorized Signatory</strong><br>Senior Quantity Surveyor & Proposal Head<br>AmpEdge Solutions, Howrah</p>
+                        </div>
+                        <div class="pdf-sig-card">
+                            <h4>ACCEPTED & CONFIRMED BY</h4>
+                            <p class="sig-company" id="pdf-sig-client">Sun Construction</p>
+                            <p class="sig-dept">Client Approval & Work Order Stamp</p>
+                            <div class="sig-stamp empty"></div>
+                            <div class="sig-line"></div>
+                            <p class="sig-detail"><strong>Authorized Client Signature & Company Seal</strong><br>Designation / Title: ___________________________<br>Date of Acceptance: __________________________</p>
+                        </div>
+                    </div>
+                    <div class="pdf-page-footer"><span>AmpEdge Solutions | Powering Every Connection with Precision</span><span>Page 3 of 3</span></div>
+                </div>
+            </div>
         </div>
     </div>
 
