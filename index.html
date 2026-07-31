@@ -3,376 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AmpEdge - Interactive BOM & Quotation System</title>
-    <!-- Google Fonts -->
+    <title>AmpEdge Solutions - Electrical Service Quotation System</title>
+    <meta name="description" content="Professional electrical service quotation and BOM generator for residential, commercial and industrial projects by AmpEdge Solutions.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- App stylesheet -->
     <link rel="stylesheet" href="style.css">
-    <!-- html2pdf.js CDN (with offline fallback script) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar Controls -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">
-                    <span class="logo-accent"><i class="fa-solid fa-bolt-lightning"></i></span>
-                    <span class="logo-text">AmpEdge <span class="sub">BOM Pro</span></span>
+    <!-- ===== STEP 1: LANDING / CATEGORY SELECTION ===== -->
+    <div id="step-1" class="step active">
+        <div class="landing-container">
+            <div class="landing-header">
+                <div class="logo-big">
+                    <span class="logo-icon"><i class="fa-solid fa-bolt-lightning"></i></span>
+                    <div>
+                        <h1 class="logo-title">AmpEdge Solutions</h1>
+                        <p class="logo-sub">Powering Every Connection with Precision</p>
+                    </div>
                 </div>
-                <p class="sidebar-subtitle">Electrical Service Quotation System</p>
+                <p class="landing-desc">Select your project type below to generate a professional electrical service quotation instantly.</p>
             </div>
 
-            <!-- Configuration Tabs -->
-            <div class="config-tabs">
-                <button class="tab-btn active" onclick="switchTab('project')"><i class="fa-solid fa-folder-open"></i> Project</button>
-                <button class="tab-btn" onclick="switchTab('points')"><i class="fa-solid fa-list-check"></i> Point Schedule</button>
-                <button class="tab-btn" onclick="switchTab('appliances')"><i class="fa-solid fa-plug"></i> BOQ & Rates</button>
+            <div class="category-grid">
+                <div class="category-card" onclick="selectCategory('house')">
+                    <div class="card-icon house-icon"><i class="fa-solid fa-house-chimney"></i></div>
+                    <h3>Independent House</h3>
+                    <p>Multi-floor residential home with complete wiring, earthing, and panel board setups.</p>
+                    <span class="card-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+                </div>
+                <div class="category-card" onclick="selectCategory('flat1bhk')">
+                    <div class="card-icon flat1-icon"><i class="fa-solid fa-building"></i></div>
+                    <h3>Flat - 1BHK</h3>
+                    <p>Compact flat with essential points for bedroom, kitchen, toilet, and living area.</p>
+                    <span class="card-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+                </div>
+                <div class="category-card" onclick="selectCategory('flat2bhk')">
+                    <div class="card-icon flat2-icon"><i class="fa-solid fa-building"></i></div>
+                    <h3>Flat - 2BHK</h3>
+                    <p>Standard 2-bedroom flat with full room-by-room point allocations.</p>
+                    <span class="card-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+                </div>
+                <div class="category-card" onclick="selectCategory('flat3bhk')">
+                    <div class="card-icon flat3-icon"><i class="fa-solid fa-building"></i></div>
+                    <h3>Flat - 3BHK</h3>
+                    <p>Premium flat with master bedroom, multiple toilets, and dedicated kitchen lines.</p>
+                    <span class="card-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+                </div>
+                <div class="category-card" onclick="selectCategory('flat4bhk')">
+                    <div class="card-icon flat4-icon"><i class="fa-solid fa-building-columns"></i></div>
+                    <h3>Flat - 4BHK</h3>
+                    <p>Luxury flat with pooja room, servant quarter, and premium point configurations.</p>
+                    <span class="card-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+                </div>
+                <div class="category-card" onclick="selectCategory('apartment')">
+                    <div class="card-icon apt-icon"><i class="fa-solid fa-city"></i></div>
+                    <h3>Apartment Building</h3>
+                    <p>Multi-flat apartments with common area, parking, and per-flat multiplier support.</p>
+                    <span class="card-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+                </div>
+                <div class="category-card" onclick="selectCategory('office')">
+                    <div class="card-icon office-icon"><i class="fa-solid fa-briefcase"></i></div>
+                    <h3>Commercial Office</h3>
+                    <p>Workstations, server rooms, conference rooms, pantry, and reception area wiring.</p>
+                    <span class="card-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+                </div>
+                <div class="category-card" onclick="selectCategory('industrial')">
+                    <div class="card-icon ind-icon"><i class="fa-solid fa-industry"></i></div>
+                    <h3>Industrial / Factory</h3>
+                    <p>Heavy-duty 3-phase lines, machinery motors, high-bay lighting, and safety earthing.</p>
+                    <span class="card-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+                </div>
             </div>
 
-            <!-- Scrollable Settings Panel -->
-            <div class="settings-content">
-                <!-- Tab 1: Project Info -->
-                <div id="tab-project" class="tab-panel active">
-                    <h3 class="section-title">Client & Project Metadata</h3>
-                    
-                    <div class="form-group">
-                        <label for="client-name">Prepared For (Client Name)</label>
-                        <input type="text" id="client-name" value="Sun Construction" placeholder="e.g. Sun Construction">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="project-name">Project Title</label>
-                        <input type="text" id="project-name" value="G+4 Residential Apartment" placeholder="e.g. G+4 Residential Apartment">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="project-address">Site Location / Address</label>
-                        <input type="text" id="project-address" value="Howrah, West Bengal" placeholder="e.g. Howrah, West Bengal">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="quotation-number">Quotation Number</label>
-                        <input type="text" id="quotation-number" value="AE/QT/2026/089" placeholder="e.g. AE/QT/2026/089">
-                    </div>
+            <div class="landing-footer">
+                <p>&copy; 2026 AmpEdge Solutions | Electrical Contracting & Engineering Division</p>
+            </div>
+        </div>
+    </div>
 
-                    <div class="form-group-row">
-                        <div class="form-group">
-                            <label for="quotation-date">Date</label>
-                            <input type="date" id="quotation-date" value="2026-07-31">
-                        </div>
-                        <div class="form-group">
-                            <label for="flat-count">Number of Units (Multiplier)</label>
-                            <input type="number" id="flat-count" value="16" min="1">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="scope-type">Select Preset Template</label>
-                        <select id="scope-type" onchange="loadTemplatePreset(this.value)">
-                            <option value="flat2bhk">Standard Flat (2BHK)</option>
-                            <option value="flat1bhk">Standard Flat (1BHK)</option>
-                            <option value="flat3bhk">Premium Flat (3BHK)</option>
-                            <option value="flat4bhk">Luxury Flat (4BHK)</option>
-                            <option value="house">Independent House (Multi-floor)</option>
-                            <option value="office">Commercial Office Space</option>
-                            <option value="industrial">Industrial Factory / Workshop</option>
-                        </select>
-                    </div>
+    <!-- ===== STEP 2: POINT CONFIGURATION ===== -->
+    <div id="step-2" class="step">
+        <div class="config-container">
+            <div class="config-topbar">
+                <button class="back-btn" onclick="goToStep(1)"><i class="fa-solid fa-arrow-left"></i> Back to Categories</button>
+                <div class="selected-category-badge" id="selected-badge">
+                    <i class="fa-solid fa-house"></i> <span id="badge-text">Independent House</span>
                 </div>
+            </div>
 
-                <!-- Tab 2: Point Allocation -->
-                <div id="tab-points" class="tab-panel">
-                    <div class="section-header-actions">
-                        <h3 class="section-title">Point Allocation (Per Unit)</h3>
-                        <button class="reset-btn" onclick="resetPoints()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+            <!-- Client Info Section -->
+            <div class="config-section">
+                <h2 class="config-section-title"><i class="fa-solid fa-user-tie"></i> Client & Project Details</h2>
+                <div class="client-form-grid">
+                    <div class="form-field">
+                        <label>Client Name</label>
+                        <input type="text" id="inp-client" value="Sun Construction" placeholder="Enter client name">
                     </div>
-
-                    <div class="accordion-item">
-                        <div class="accordion-header" onclick="toggleAccordion('baseline-accordion')">
-                            <span><i class="fa-solid fa-house-circle-check"></i> Promoter Baseline Scope</span>
-                            <i class="fa-solid fa-chevron-down arrow"></i>
-                        </div>
-                        <div id="baseline-accordion" class="accordion-body open">
-                            <div class="points-grid" id="baseline-points-container">
-                                <!-- Baseline points will load here -->
-                            </div>
-                        </div>
+                    <div class="form-field">
+                        <label>Project Title</label>
+                        <input type="text" id="inp-project" value="G+4 Residential Apartment" placeholder="Enter project name">
                     </div>
-
-                    <div class="accordion-item">
-                        <div class="accordion-header" onclick="toggleAccordion('recommended-accordion')">
-                            <span><i class="fa-solid fa-star"></i> AmpEdge Recommended Scope</span>
-                            <i class="fa-solid fa-chevron-down arrow"></i>
-                        </div>
-                        <div id="recommended-accordion" class="accordion-body open">
-                            <div class="points-grid" id="recommended-points-container">
-                                <!-- Recommended points will load here -->
-                            </div>
-                        </div>
+                    <div class="form-field">
+                        <label>Site Address</label>
+                        <input type="text" id="inp-address" value="Howrah, West Bengal" placeholder="Enter site location">
                     </div>
-                </div>
-
-                <!-- Tab 3: Appliances, Commercial & Rates -->
-                <div id="tab-appliances" class="tab-panel">
-                    <h3 class="section-title">Part B: Appliance / Custom Items</h3>
-                    <div class="appliances-list" id="appliances-container">
-                        <!-- Custom items will load here -->
+                    <div class="form-field">
+                        <label>Quotation Number</label>
+                        <input type="text" id="inp-quoteno" value="AE/QT/2026/089" placeholder="e.g. AE/QT/2026/089">
                     </div>
-
-                    <h3 class="section-title editable-rates-header" onclick="toggleAccordion('rates-editor')">
-                        <span><i class="fa-solid fa-calculator"></i> Unit Rates Manager</span>
-                        <i class="fa-solid fa-chevron-down arrow"></i>
-                    </h3>
-                    <div id="rates-editor" class="accordion-body open">
-                        <div class="rates-grid" id="rates-container">
-                            <!-- Unit Rates will load here -->
-                        </div>
+                    <div class="form-field">
+                        <label>Date</label>
+                        <input type="date" id="inp-date">
+                    </div>
+                    <div class="form-field">
+                        <label>Number of Units (Multiplier)</label>
+                        <input type="number" id="inp-units" value="1" min="1">
                     </div>
                 </div>
             </div>
 
-            <!-- Sidebar Actions Footer -->
-            <div class="sidebar-footer">
-                <button class="btn btn-primary btn-block" onclick="downloadPDF()"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
-                <button class="btn btn-secondary btn-block" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Document</button>
-            </div>
-        </aside>
-
-        <!-- Main Document Preview Area -->
-        <main class="document-preview-container">
-            <div class="document-toolbar">
-                <div class="preview-mode-switch">
-                    <span class="preview-badge"><i class="fa-solid fa-eye"></i> Live A4 Print Preview</span>
+            <!-- Points Configuration -->
+            <div class="config-section">
+                <h2 class="config-section-title"><i class="fa-solid fa-list-check"></i> Electrical Point Schedule <span class="hint">(Enter Quantity for each item)</span></h2>
+                <div class="points-table-wrapper">
+                    <table class="config-points-table" id="points-table">
+                        <thead>
+                            <tr>
+                                <th style="width:40px">#</th>
+                                <th>Point Description</th>
+                                <th style="width:80px">Unit</th>
+                                <th style="width:100px">Rate (₹)</th>
+                                <th style="width:90px">Quantity</th>
+                                <th style="width:120px">Amount (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="points-tbody">
+                            <!-- Dynamically populated -->
+                        </tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <td colspan="4"></td>
+                                <td class="text-right font-bold">TOTAL:</td>
+                                <td class="text-right font-bold font-mono" id="config-total">₹0.00</td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
-                <div class="toolbar-actions">
-                    <button class="toolbar-btn" onclick="toggleTheme()" title="Toggle Dark Dashboard"><i class="fa-solid fa-circle-half-stroke"></i> Mode</button>
-                </div>
             </div>
 
-            <!-- Actual Document Pages (Container processed by PDF Generator) -->
-            <div id="quotation-document" class="quotation-document">
-                
-                <!-- PAGE 1: TITLE & COVER PAGE -->
-                <div class="pdf-page page-1">
-                    <div class="brand-header">
-                        <div class="brand-info">
-                            <h1 class="brand-title">AmpEdge Solutions</h1>
-                            <p class="brand-tagline">Powering Every Connection with Precision</p>
+            <!-- Generate Button -->
+            <div class="generate-section">
+                <button class="generate-btn" onclick="generateQuotation()">
+                    <i class="fa-solid fa-file-invoice"></i> Generate Quotation
+                    <span class="key-hint">Enter ↵</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== STEP 3: PDF PREVIEW & DOWNLOAD ===== -->
+    <div id="step-3" class="step">
+        <div class="preview-topbar">
+            <button class="back-btn" onclick="goToStep(2)"><i class="fa-solid fa-arrow-left"></i> Back to Configuration</button>
+            <div class="preview-actions">
+                <button class="action-btn edit-btn" onclick="goToStep(2)"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                <button class="action-btn print-btn" onclick="window.print()"><i class="fa-solid fa-print"></i> Print</button>
+                <button class="action-btn download-btn" id="download-btn" onclick="downloadPDF()"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
+            </div>
+        </div>
+
+        <div class="preview-scroll-area">
+            <div id="pdf-document" class="pdf-document">
+
+                <!-- PAGE 1: COVER -->
+                <div class="pdf-page page-cover">
+                    <div class="pdf-brand-header">
+                        <div>
+                            <h1 class="pdf-brand-title">AmpEdge Solutions</h1>
+                            <p class="pdf-brand-tagline">Powering Every Connection with Precision</p>
                         </div>
-                        <div class="brand-meta-right">
-                            <span class="doc-badge">COMMERCIAL PROPOSAL</span>
-                        </div>
+                        <span class="pdf-doc-badge">COMMERCIAL PROPOSAL</span>
                     </div>
-
-                    <div class="cover-content">
-                        <div class="cover-title-group">
-                            <h2 class="cover-main-title">ELECTRICAL WIRING LABOUR SERVICE & BOQ PROPOSAL</h2>
-                            <p class="cover-subtitle">Detailed point allocation schedule, commercial assessment and Terms of Agreement</p>
+                    <div class="pdf-cover-body">
+                        <div class="pdf-cover-title-block">
+                            <h2>ELECTRICAL WIRING LABOUR SERVICE & BOQ PROPOSAL</h2>
+                            <p>Detailed point allocation schedule, commercial assessment and Terms of Agreement</p>
                         </div>
-
-                        <div class="metadata-grid">
-                            <div class="meta-card">
-                                <span class="meta-label">PREPARED FOR</span>
-                                <span class="meta-value text-highlight" id="lbl-client-name">Sun Construction</span>
-                            </div>
-                            <div class="meta-card">
-                                <span class="meta-label">PROJECT NAME</span>
-                                <span class="meta-value" id="lbl-project-name">G+4 Residential Apartment</span>
-                            </div>
-                            <div class="meta-card">
-                                <span class="meta-label">SITE ADDRESS</span>
-                                <span class="meta-value" id="lbl-project-address">Howrah, West Bengal</span>
-                            </div>
-                            <div class="meta-card">
-                                <span class="meta-label">QUOTATION NO.</span>
-                                <span class="meta-value text-mono" id="lbl-quote-no">AE/QT/2026/089</span>
-                            </div>
-                            <div class="meta-card">
-                                <span class="meta-label">DATE OF ISSUE</span>
-                                <span class="meta-value" id="lbl-quote-date">July 31, 2026</span>
-                            </div>
-                            <div class="meta-card">
-                                <span class="meta-label">TOTAL UNITS</span>
-                                <span class="meta-value" id="lbl-flat-count">16 Flats</span>
-                            </div>
+                        <div class="pdf-meta-grid">
+                            <div class="pdf-meta-card"><span class="pdf-meta-label">PREPARED FOR</span><span class="pdf-meta-value highlight" id="pdf-client">Sun Construction</span></div>
+                            <div class="pdf-meta-card"><span class="pdf-meta-label">PROJECT NAME</span><span class="pdf-meta-value" id="pdf-project">G+4 Residential Apartment</span></div>
+                            <div class="pdf-meta-card"><span class="pdf-meta-label">SITE ADDRESS</span><span class="pdf-meta-value" id="pdf-address">Howrah, West Bengal</span></div>
+                            <div class="pdf-meta-card"><span class="pdf-meta-label">QUOTATION NO.</span><span class="pdf-meta-value mono" id="pdf-quoteno">AE/QT/2026/089</span></div>
+                            <div class="pdf-meta-card"><span class="pdf-meta-label">DATE OF ISSUE</span><span class="pdf-meta-value" id="pdf-date">July 31, 2026</span></div>
+                            <div class="pdf-meta-card"><span class="pdf-meta-label">TOTAL UNITS</span><span class="pdf-meta-value" id="pdf-units">1 Unit</span></div>
                         </div>
-
-                        <div class="executive-summary">
+                        <div class="pdf-summary-box">
                             <h3>1. Executive Summary</h3>
-                            <p>AmpEdge Solutions is pleased to submit this proposal for the complete electrical point wiring and installation labour for the upcoming construction project. Our proposed model ensures strict compliance with national safety guidelines, high quality workmanship, and transparent billing. The schedules detailed below provide a granular view of the point allocations per flat and overall commercial valuations based on verified calculations.</p>
+                            <p>AmpEdge Solutions is pleased to submit this proposal for the complete electrical point wiring and installation labour for the upcoming construction project. Our proposed model ensures strict compliance with IS 732, IS 3043, and National Electrical Code guidelines, high quality workmanship, and transparent billing.</p>
                         </div>
                     </div>
-
-                    <div class="page-footer">
-                        <span class="footer-left">AmpEdge Solutions | Powering Every Connection with Precision</span>
-                        <span class="footer-right">Page 1 of 4</span>
-                    </div>
+                    <div class="pdf-page-footer"><span>AmpEdge Solutions | Powering Every Connection with Precision</span><span>Page 1 of 3</span></div>
                 </div>
 
-                <!-- PAGE 2: POINT ALLOCATION SCHEDULE -->
-                <div class="pdf-page page-2">
-                    <div class="section-header-strip">
-                        <h2>2. DETAILED FLAT ELECTRICAL POINT ALLOCATION SCHEDULE</h2>
+                <!-- PAGE 2: BOQ TABLE -->
+                <div class="pdf-page page-boq">
+                    <div class="pdf-section-strip"><h2>2. DETAILED BILL OF QUANTITIES (BOQ) & COMMERCIAL SCHEDULE</h2></div>
+                    <table class="pdf-boq-table">
+                        <thead>
+                            <tr>
+                                <th style="width:40px">ITEM</th>
+                                <th>DESCRIPTION OF WORK</th>
+                                <th class="text-center" style="width:70px">UNIT</th>
+                                <th class="text-right" style="width:80px">RATE (₹)</th>
+                                <th class="text-center" style="width:80px">QTY</th>
+                                <th class="text-right" style="width:110px">AMOUNT (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pdf-boq-tbody">
+                            <!-- Dynamically populated -->
+                        </tbody>
+                    </table>
+                    <div class="pdf-grand-total-banner">
+                        <span>GRAND TOTAL CONFIRMED LABOUR COST:</span>
+                        <span class="pdf-grand-value" id="pdf-grand-total">₹0.00</span>
                     </div>
-
-                    <div class="dual-column-layout">
-                        <!-- Left Column: Baseline Scope -->
-                        <div class="scope-col promoter-col">
-                            <div class="table-header-strip promoter-strip">
-                                <span><i class="fa-solid fa-circle-check"></i> PROMOTER BASELINE SCOPE (<span id="total-baseline-header">25</span> POINTS)</span>
-                            </div>
-                            <table class="scope-table" id="table-baseline">
-                                <thead>
-                                    <tr>
-                                        <th>LOCATION & POINT TYPE</th>
-                                        <th class="text-center" style="width: 50px;">QTY</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Populated dynamically -->
-                                </tbody>
-                            </table>
-                            <div class="subtotal-row-bar">
-                                <span>Subtotal Baseline Points / Unit</span>
-                                <span class="subtotal-qty" id="lbl-subtotal-baseline">25</span>
-                            </div>
-                        </div>
-
-                        <!-- Right Column: Recommended Scope -->
-                        <div class="scope-col recommended-col">
-                            <div class="table-header-strip recommended-strip">
-                                <span><i class="fa-solid fa-star"></i> AMPEDGE RECOMMENDED SCOPE (<span id="total-recommended-header">15</span> POINTS)</span>
-                            </div>
-                            <table class="scope-table" id="table-recommended">
-                                <thead>
-                                    <tr>
-                                        <th>LOCATION & SAFETY / VALUE-ADD ITEM</th>
-                                        <th class="text-center" style="width: 50px;">QTY</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Populated dynamically -->
-                                </tbody>
-                            </table>
-                            <div class="subtotal-row-bar recommended-bar">
-                                <span>Subtotal Recommended Points / Unit</span>
-                                <span class="subtotal-qty" id="lbl-subtotal-recommended">15</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="rationale-container">
-                        <p class="rationale-title"><i class="fa-solid fa-triangle-exclamation"></i> Technical Rationale for Recommended Points:</p>
-                        <p class="rationale-text">Modern premises require dedicated circuits for balcony lighting, bedside device charging, kitchen appliances (chimneys/microwaves), and back-up inverter routing. Providing optimized points per flat prevents post-handover wall chasing, ensures balanced phase distribution, and significantly elevates property value.</p>
-                    </div>
-
-                    <div class="page-footer">
-                        <span class="footer-left">AmpEdge Solutions | Powering Every Connection with Precision</span>
-                        <span class="footer-right">Page 2 of 4</span>
-                    </div>
+                    <div class="pdf-page-footer"><span>AmpEdge Solutions | Powering Every Connection with Precision</span><span>Page 2 of 3</span></div>
                 </div>
 
-                <!-- PAGE 3: BOQ & COMMERCIAL SCHEDULE -->
-                <div class="pdf-page page-3">
-                    <div class="section-header-strip">
-                        <h2>3. DETAILED BILL OF QUANTITIES (BOQ) & COMMERCIAL SCHEDULE</h2>
-                    </div>
-
-                    <!-- Part A Table -->
-                    <div class="boq-section">
-                        <h3 class="boq-subtitle">Part A: Core Unit Electrical Point Wiring Labour (<span class="flat-count-text">16</span> Units)</h3>
-                        <table class="boq-table">
-                            <thead>
-                                <tr>
-                                    <th style="width: 50px;">ITEM</th>
-                                    <th>SCOPE CATEGORY & DESCRIPTION</th>
-                                    <th class="text-center">CALCULATION</th>
-                                    <th class="text-center">TOTAL POINTS</th>
-                                    <th class="text-right">RATE (₹)</th>
-                                    <th class="text-right">AMOUNT (₹)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="text-center font-bold">1.1</td>
-                                    <td>
-                                        <span class="font-bold">Promoter Scope Baseline Wiring</span><br>
-                                        <span class="text-muted text-xs">Baseline electrical points per unit across <span class="flat-count-text">16</span> units (Light, Fan, Switch & Basic Sockets)</span>
-                                    </td>
-                                    <td class="text-center" id="boq-calc-1">16 Units × 25 Pts</td>
-                                    <td class="text-center" id="boq-pts-1">400 Points</td>
-                                    <td class="text-right" id="boq-rate-1">₹250</td>
-                                    <td class="text-right font-mono" id="boq-amt-1">₹1,00,000.00</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center font-bold">1.2</td>
-                                    <td>
-                                        <span class="font-bold">AmpEdge Recommended Safety & Value-Add Wiring</span><br>
-                                        <span class="text-muted text-xs">Recommended safety/value-add points per unit across <span class="flat-count-text">16</span> units (Balconies, UPS, Bedside & Kitchen Sockets)</span>
-                                    </td>
-                                    <td class="text-center" id="boq-calc-2">16 Units × 15 Pts</td>
-                                    <td class="text-center" id="boq-pts-2">240 Points</td>
-                                    <td class="text-right" id="boq-rate-2">₹250</td>
-                                    <td class="text-right font-mono" id="boq-amt-2">₹60,000.00</td>
-                                </tr>
-                                <tr class="subtotal-row-highlight">
-                                    <td colspan="3" class="text-right font-bold uppercase">Subtotal Core Wiring Labour (<span id="total-points-combined">640</span> Points):</td>
-                                    <td class="text-center font-bold" id="boq-total-points">640 Points</td>
-                                    <td class="text-right font-bold" id="boq-weighted-rate">₹250</td>
-                                    <td class="text-right font-mono font-bold" id="boq-subtotal-a">₹1,60,000.00</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Part B Table -->
-                    <div class="boq-section">
-                        <h3 class="boq-subtitle">Part B: Confirmed Appliance, DB & Commercial Area Breakdown</h3>
-                        <p class="boq-note">* Note: Quantities updated per client confirmation. Rates reflect special discounted promotional tariffs.</p>
-                        <table class="boq-table">
-                            <thead>
-                                <tr>
-                                    <th style="width: 50px;">ITEM</th>
-                                    <th>DESCRIPTION OF WORK</th>
-                                    <th class="text-center" style="width: 100px;">UNIT</th>
-                                    <th class="text-right" style="width: 100px;">RATE (₹)</th>
-                                    <th class="text-center" style="width: 150px;">CONFIRMED QTY</th>
-                                    <th class="text-right" style="width: 150px;">AMOUNT (₹)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="boq-part-b-body">
-                                <!-- Populated dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="grand-total-banner">
-                        <span class="banner-title">GRAND TOTAL CONFIRMED LABOUR COST (PARTS A + B):</span>
-                        <span class="banner-value" id="lbl-grand-total">₹1,98,000.00</span>
-                    </div>
-
-                    <div class="page-footer">
-                        <span class="footer-left">AmpEdge Solutions | Powering Every Connection with Precision</span>
-                        <span class="footer-right">Page 3 of 4</span>
-                    </div>
-                </div>
-
-                <!-- PAGE 4: TERMS, PAYMENT SCHEDULE & SIGNATURES -->
-                <div class="pdf-page page-4">
-                    <div class="section-header-strip">
-                        <h2>4. COMMERCIAL TERMS, INCLUSIONS & PAYMENT SCHEDULE</h2>
-                    </div>
-
-                    <div class="dual-column-layout layout-top-align">
-                        <!-- Scope and Inclusions Column -->
-                        <div class="terms-card">
-                            <h3 class="terms-card-title"><i class="fa-solid fa-list-ul"></i> SCOPE CONDITIONS & STANDARD INCLUSIONS</h3>
-                            <ul class="terms-list">
+                <!-- PAGE 3: TERMS & SIGNATURES -->
+                <div class="pdf-page page-terms">
+                    <div class="pdf-section-strip"><h2>3. COMMERCIAL TERMS, INCLUSIONS & PAYMENT SCHEDULE</h2></div>
+                    <div class="pdf-terms-grid">
+                        <div class="pdf-terms-card">
+                            <h3><i class="fa-solid fa-list-ul"></i> SCOPE CONDITIONS & STANDARD INCLUSIONS</h3>
+                            <ul>
                                 <li><strong>Labour Charges Only:</strong> Quoted pricing covers complete installation labour. Electrical materials (wires, conduits, switches, DBs) to be supplied by client or quoted separately.</li>
                                 <li><strong>Free CAD Layout Consultation:</strong> Electrical drawing & layout consultation provided <strong>FREE OF COST</strong> upon project award.</li>
                                 <li><strong>BOQ & Load Design:</strong> Detailed BOQ preparation and phase-balancing circuit design included.</li>
@@ -383,104 +250,45 @@
                                 <li><strong>Statutory Taxes:</strong> GST extra as applicable.</li>
                             </ul>
                         </div>
-
-                        <!-- Payment Schedule Column -->
-                        <div class="terms-card">
-                            <h3 class="terms-card-title"><i class="fa-solid fa-receipt"></i> PAYMENT SCHEDULE & VALIDITY</h3>
-                            <table class="payment-table">
-                                <thead>
-                                    <tr>
-                                        <th>Milestone Stage</th>
-                                        <th class="text-right">Percentage</th>
-                                        <th class="text-right">Amount</th>
-                                    </tr>
-                                </thead>
+                        <div class="pdf-terms-card">
+                            <h3><i class="fa-solid fa-receipt"></i> PAYMENT SCHEDULE & VALIDITY</h3>
+                            <table class="pdf-payment-table">
+                                <thead><tr><th>Milestone</th><th class="text-right">%</th><th class="text-right">Amount</th></tr></thead>
                                 <tbody>
-                                    <tr>
-                                        <td>
-                                            <strong>1. Advance Mobilization</strong><br>
-                                            <span class="text-muted text-xs">30% of baseline contract</span>
-                                        </td>
-                                        <td class="text-right font-bold">30%</td>
-                                        <td class="text-right font-mono font-bold text-primary" id="payment-ms-1">₹59,400.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <strong>2. Running Progress Payments</strong><br>
-                                            <span class="text-muted text-xs">Stage-wise piping & wire pulling</span>
-                                        </td>
-                                        <td class="text-right font-bold">40%</td>
-                                        <td class="text-right font-mono font-bold text-primary" id="payment-ms-2">₹79,200.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <strong>3. Testing & Handover</strong><br>
-                                            <span class="text-muted text-xs">After final testing & DB commissioning</span>
-                                        </td>
-                                        <td class="text-right font-bold">30%</td>
-                                        <td class="text-right font-mono font-bold text-primary" id="payment-ms-3">₹59,400.00</td>
-                                    </tr>
+                                    <tr><td><strong>1. Advance Mobilization</strong><br><small>30% of contract</small></td><td class="text-right">30%</td><td class="text-right font-mono" id="pdf-ms1">₹0</td></tr>
+                                    <tr><td><strong>2. Running Progress</strong><br><small>Piping & wire pulling</small></td><td class="text-right">40%</td><td class="text-right font-mono" id="pdf-ms2">₹0</td></tr>
+                                    <tr><td><strong>3. Testing & Handover</strong><br><small>Final testing & DB</small></td><td class="text-right">30%</td><td class="text-right font-mono" id="pdf-ms3">₹0</td></tr>
                                 </tbody>
                             </table>
-                            <div class="proposal-validity-box">
-                                <strong>Proposal Validity:</strong> 30 Days from date of issue (Valid until <span id="lbl-validity-date">August 30, 2026</span>).
-                            </div>
+                            <div class="pdf-validity-box"><strong>Proposal Validity:</strong> 30 Days from date of issue (Valid until <span id="pdf-validity">—</span>).</div>
                         </div>
                     </div>
 
-                    <!-- Page 4 Section 5: Authorization and Signature -->
-                    <div class="section-header-strip authorization-strip">
-                        <h2>5. ACCEPTANCE & WORK ORDER AUTHORIZATION</h2>
-                    </div>
-                    <p class="auth-helper-text">By signing below, the client approves this updated commercial quotation and scope of work.</p>
-
-                    <div class="signature-grid">
-                        <div class="signature-card">
-                            <h4 class="sig-header">PREPARED & ISSUED BY</h4>
-                            <div class="sig-body">
-                                <span class="sig-company">AmpEdge Solutions</span>
-                                <span class="sig-department text-muted">Electrical Contracting & Engineering Division</span>
-                                <div class="digital-stamp">
-                                    [ Digitally Signed & Approved ]
-                                </div>
-                                <div class="sig-line"></div>
-                                <div class="sig-details">
-                                    <strong>Authorized Signatory</strong><br>
-                                    Senior Quantity Surveyor & Proposal Head<br>
-                                    AmpEdge Solutions, Howrah
-                                </div>
-                            </div>
+                    <div class="pdf-section-strip sig-strip"><h2>4. ACCEPTANCE & WORK ORDER AUTHORIZATION</h2></div>
+                    <div class="pdf-sig-grid">
+                        <div class="pdf-sig-card">
+                            <h4>PREPARED & ISSUED BY</h4>
+                            <p class="sig-company">AmpEdge Solutions</p>
+                            <p class="sig-dept">Electrical Contracting & Engineering Division</p>
+                            <div class="sig-stamp">[ Digitally Signed & Approved ]</div>
+                            <div class="sig-line"></div>
+                            <p class="sig-detail"><strong>Authorized Signatory</strong><br>Senior Quantity Surveyor & Proposal Head<br>AmpEdge Solutions, Howrah</p>
                         </div>
-
-                        <div class="signature-card">
-                            <h4 class="sig-header">ACCEPTED & CONFIRMED BY</h4>
-                            <div class="sig-body">
-                                <span class="sig-company" id="lbl-sig-client">Sun Construction</span>
-                                <span class="sig-department text-muted">Client Approval & Work Order Stamp</span>
-                                <div class="digital-stamp empty">
-                                    <!-- For Physical Stamp/Signature -->
-                                </div>
-                                <div class="sig-line"></div>
-                                <div class="sig-details">
-                                    <strong>Authorized Client Signature & Company Seal</strong><br>
-                                    Designation / Title: ___________________________<br>
-                                    Date of Acceptance: __________________________
-                                </div>
-                            </div>
+                        <div class="pdf-sig-card">
+                            <h4>ACCEPTED & CONFIRMED BY</h4>
+                            <p class="sig-company" id="pdf-sig-client">Sun Construction</p>
+                            <p class="sig-dept">Client Approval & Work Order Stamp</p>
+                            <div class="sig-stamp empty"></div>
+                            <div class="sig-line"></div>
+                            <p class="sig-detail"><strong>Authorized Client Signature & Company Seal</strong><br>Designation / Title: ___________________________<br>Date of Acceptance: __________________________</p>
                         </div>
                     </div>
-
-                    <div class="page-footer">
-                        <span class="footer-left">AmpEdge Solutions | Powering Every Connection with Precision</span>
-                        <span class="footer-right">Page 4 of 4</span>
-                    </div>
+                    <div class="pdf-page-footer"><span>AmpEdge Solutions | Powering Every Connection with Precision</span><span>Page 3 of 3</span></div>
                 </div>
-
             </div>
-        </main>
+        </div>
     </div>
 
-    <!-- Application script -->
     <script src="app.js"></script>
 </body>
 </html>
