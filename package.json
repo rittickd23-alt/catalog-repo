@@ -1,0 +1,12 @@
+{
+  "name": "ampedge-bom-system",
+  "version": "1.0.0",
+  "description": "Interactive BOM & Quotation System for AmpEdge Solutions",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx -y serve .",
+    "start": "npx -y serve ."
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
