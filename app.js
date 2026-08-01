@@ -434,14 +434,23 @@ function renderPointsTable() {
         const tr = document.createElement('tr');
         const effectiveRate = Math.max(0, item.rate - item.discount);
         const amount = item.qty * effectiveRate;
+        
+        // For custom rows, make name and unit editable
+        const nameCell = item.isCustom
+            ? `<input type="text" class="name-input" value="${item.name}" data-idx="${idx}" data-field="name" onchange="updateConfigItem(this)" placeholder="Enter description...">`
+            : item.name;
+        const unitCell = item.isCustom
+            ? `<input type="text" class="unit-input" value="${item.unit}" data-idx="${idx}" data-field="unit" onchange="updateConfigItem(this)" placeholder="Unit">`
+            : item.unit;
+        
         tr.innerHTML = `
             <td class="text-center" style="color:var(--text-muted)">${idx + 1}</td>
-            <td>${item.name}</td>
-            <td class="text-center">${item.unit}</td>
+            <td>${nameCell}</td>
+            <td class="text-center">${unitCell}</td>
             <td><input type="number" class="rate-input" value="${item.rate}" min="0" data-idx="${idx}" data-field="rate" onchange="updateConfigItem(this)"></td>
             <td><input type="number" value="${item.qty}" min="0" data-idx="${idx}" data-field="qty" onchange="updateConfigItem(this)"></td>
             <td><input type="number" class="disc-input" value="${item.discount}" min="0" data-idx="${idx}" data-field="discount" onchange="updateConfigItem(this)"></td>
-            <td class="amount-cell" id="amt-${idx}">${amount > 0 ? formatCurrency(amount) : '—'}</td>
+            <td class="amount-cell" id="amt-${idx}">${amount > 0 ? formatCurrency(amount) : '\u2014'}</td>
         `;
         tbody.appendChild(tr);
     });
@@ -452,11 +461,16 @@ function renderPointsTable() {
 function updateConfigItem(el) {
     const idx = parseInt(el.dataset.idx);
     const field = el.dataset.field;
-    configItems[idx][field] = parseFloat(el.value) || 0;
+    
+    if (field === 'name' || field === 'unit') {
+        configItems[idx][field] = el.value;
+    } else {
+        configItems[idx][field] = parseFloat(el.value) || 0;
+    }
     
     const effectiveRate = Math.max(0, configItems[idx].rate - configItems[idx].discount);
     const amount = configItems[idx].qty * effectiveRate;
-    document.getElementById(`amt-${idx}`).textContent = amount > 0 ? formatCurrency(amount) : '—';
+    document.getElementById(`amt-${idx}`).textContent = amount > 0 ? formatCurrency(amount) : '\u2014';
     recalcTotal();
 }
 
@@ -485,6 +499,28 @@ function applyGlobalDiscount() {
         item.discount = discVal;
     });
     renderPointsTable(); // Re-render with updated discounts
+}
+
+// Add custom row
+function addCustomRow() {
+    configItems.push({
+        name: '',
+        unit: 'Point',
+        rate: 0,
+        qty: 0,
+        discount: 0,
+        isCustom: true
+    });
+    renderPointsTable();
+    
+    // Scroll to the new row and focus the name input
+    const tbody = document.getElementById('points-tbody');
+    const lastRow = tbody.lastElementChild;
+    if (lastRow) {
+        lastRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const nameInput = lastRow.querySelector('.name-input');
+        if (nameInput) setTimeout(() => nameInput.focus(), 300);
+    }
 }
 
 // ====== STEP 3: GENERATE QUOTATION & PDF PREVIEW ======
