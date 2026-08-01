@@ -134,6 +134,7 @@
                                 <th style="width:80px">Unit</th>
                                 <th style="width:100px">Rate (₹)</th>
                                 <th style="width:90px">Quantity</th>
+                                <th style="width:100px">Discount (₹)</th>
                                 <th style="width:120px">Amount (₹)</th>
                             </tr>
                         </thead>
@@ -142,7 +143,7 @@
                         </tbody>
                         <tfoot>
                             <tr class="total-row">
-                                <td colspan="4"></td>
+                                <td colspan="5"></td>
                                 <td class="text-right font-bold">TOTAL:</td>
                                 <td class="text-right font-bold font-mono" id="config-total">₹0.00</td>
                             </tr>
@@ -153,11 +154,14 @@
 
             <!-- Discount Section -->
             <div class="config-section">
-                <h2 class="config-section-title"><i class="fa-solid fa-tags" style="color:#f59e0b"></i> Discount <span class="hint">(Per-point discount offered to client)</span></h2>
-                <div class="client-form-grid" style="grid-template-columns:1fr 1fr 1fr 1fr;">
+                <h2 class="config-section-title"><i class="fa-solid fa-tags" style="color:#f59e0b"></i> Discount Summary <span class="hint">(Apply global discount OR edit per-row above)</span></h2>
+                <div class="client-form-grid" style="grid-template-columns:1fr auto 1fr 1fr 1fr;align-items:end;">
                     <div class="form-field">
-                        <label>Discount per Point (₹)</label>
-                        <input type="number" id="inp-discount" value="0" min="0" onchange="recalcTotal()">
+                        <label>Set Discount for ALL Points (₹)</label>
+                        <input type="number" id="inp-discount" value="0" min="0">
+                    </div>
+                    <div class="form-field">
+                        <button class="apply-all-btn" onclick="applyGlobalDiscount()"><i class="fa-solid fa-check-double"></i> Apply to All</button>
                     </div>
                     <div class="form-field">
                         <label>Total Discount (₹)</label>
@@ -277,12 +281,13 @@
                     <table class="pdf-boq-table">
                         <thead>
                             <tr>
-                                <th style="width:40px">ITEM</th>
+                                <th style="width:35px">ITEM</th>
                                 <th>DESCRIPTION OF WORK</th>
-                                <th class="text-center" style="width:70px">UNIT</th>
-                                <th class="text-right" style="width:80px">RATE (₹)</th>
-                                <th class="text-center" style="width:80px">QTY</th>
-                                <th class="text-right" style="width:110px">AMOUNT (₹)</th>
+                                <th class="text-center" style="width:55px">UNIT</th>
+                                <th class="text-right" style="width:70px">RATE (₹)</th>
+                                <th class="text-center" style="width:50px">QTY</th>
+                                <th class="text-right" style="width:70px">DISC (₹)</th>
+                                <th class="text-right" style="width:85px">AMOUNT (₹)</th>
                             </tr>
                         </thead>
                         <tbody id="pdf-boq-tbody">

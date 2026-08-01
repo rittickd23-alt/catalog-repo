@@ -60,6 +60,7 @@ const CATALOG = {
             { name: "Lightning Arrester (Copper Rod) Installation", unit: "Set", rate: 2000 },
             { name: "Heavy Duty PVC Conduit Pipe Laying", unit: "Sq.Ft", rate: 6 },
             { name: "Main Sub-Main Line Cable Wiring", unit: "Rft", rate: 17 },
+            { name: "Concealer PVC Conduit Pipe Laying", unit: "Sq.Ft", rate: 7 },
         ]
     },
     flat1bhk: {
@@ -94,6 +95,7 @@ const CATALOG = {
             { name: "Balcony – Utility Light Point", unit: "Point", rate: 200 },
             { name: "Washing Area – Washing Machine Point (16A)", unit: "Point", rate: 350 },
             { name: "Inverter / UPS Bypass Line", unit: "Point", rate: 300 },
+            { name: "Concealer PVC Conduit Pipe Laying", unit: "Sq.Ft", rate: 7 },
         ]
     },
     flat2bhk: {
@@ -150,6 +152,7 @@ const CATALOG = {
             { name: "Common Area – Inverter / UPS Line Setup", unit: "Point", rate: 350 },
             { name: "DB Area – Stabilizer / AC Isolator Point", unit: "Point", rate: 300 },
             { name: "Study Area – Reading Lamp Point", unit: "Point", rate: 200 },
+            { name: "Concealer PVC Conduit Pipe Laying", unit: "Sq.Ft", rate: 7 },
         ]
     },
     flat3bhk: {
@@ -203,6 +206,7 @@ const CATALOG = {
             { name: "Washing Balcony – Washing Machine Point (16A)", unit: "Point", rate: 350 },
             { name: "DB Space – 3-Phase Stabilizer & Isolator", unit: "Point", rate: 400 },
             { name: "Common Area – UPS / Inverter System Point", unit: "Point", rate: 400 },
+            { name: "Concealer PVC Conduit Pipe Laying", unit: "Sq.Ft", rate: 7 },
         ]
     },
     flat4bhk: {
@@ -248,6 +252,7 @@ const CATALOG = {
             { name: "Common Area – Dual Inverter Backup Loops", unit: "Point", rate: 500 },
             { name: "DB Closet – Phase Corrector & Isolators", unit: "Point", rate: 400 },
             { name: "Washing Area – Washing Machine Point (16A)", unit: "Point", rate: 350 },
+            { name: "Concealer PVC Conduit Pipe Laying", unit: "Sq.Ft", rate: 7 },
         ]
     },
     apartment: {
@@ -282,6 +287,7 @@ const CATALOG = {
             { name: "Ground Floor Commercial Shops Wiring", unit: "Point", rate: 250 },
             { name: "Heavy Duty PVC Conduit Pipe Laying", unit: "Sq.Ft", rate: 6 },
             { name: "Main Sub-Main Line Cable Wiring", unit: "Rft", rate: 17 },
+            { name: "Concealer PVC Conduit Pipe Laying", unit: "Sq.Ft", rate: 7 },
         ]
     },
     office: {
@@ -332,6 +338,7 @@ const CATALOG = {
             // Heavy
             { name: "Heavy Duty PVC Conduit / Cable Tray Installation", unit: "Sq.Ft", rate: 8 },
             { name: "Main Sub-Main Cable Wiring", unit: "Rft", rate: 20 },
+            { name: "Concealer PVC Conduit Pipe Laying", unit: "Sq.Ft", rate: 7 },
         ]
     },
     industrial: {
@@ -375,6 +382,7 @@ const CATALOG = {
             { name: "Cable Tray / Trunking Installation", unit: "Rft", rate: 30 },
             { name: "Armoured Cable Laying (Outdoor/Underground)", unit: "Rft", rate: 45 },
             { name: "Heavy Duty PVC Conduit Laying", unit: "Sq.Ft", rate: 8 },
+            { name: "Concealer PVC Conduit Pipe Laying", unit: "Sq.Ft", rate: 7 },
         ]
     }
 };
@@ -404,12 +412,13 @@ function selectCategory(key) {
     const mm = String(today.getMonth()+1).padStart(2,'0');
     document.getElementById('inp-date').value = `${today.getFullYear()}-${mm}-${dd}`;
     
-    // Clone items into configItems with default qty=0
+    // Clone items into configItems with default qty=0, discount=0
     configItems = cat.items.map(item => ({
         name: item.name,
         unit: item.unit,
         rate: item.rate,
-        qty: 0
+        qty: 0,
+        discount: 0
     }));
     
     renderPointsTable();
@@ -423,13 +432,15 @@ function renderPointsTable() {
     
     configItems.forEach((item, idx) => {
         const tr = document.createElement('tr');
-        const amount = item.qty * item.rate;
+        const effectiveRate = Math.max(0, item.rate - item.discount);
+        const amount = item.qty * effectiveRate;
         tr.innerHTML = `
             <td class="text-center" style="color:var(--text-muted)">${idx + 1}</td>
             <td>${item.name}</td>
             <td class="text-center">${item.unit}</td>
             <td><input type="number" class="rate-input" value="${item.rate}" min="0" data-idx="${idx}" data-field="rate" onchange="updateConfigItem(this)"></td>
             <td><input type="number" value="${item.qty}" min="0" data-idx="${idx}" data-field="qty" onchange="updateConfigItem(this)"></td>
+            <td><input type="number" class="disc-input" value="${item.discount}" min="0" data-idx="${idx}" data-field="discount" onchange="updateConfigItem(this)"></td>
             <td class="amount-cell" id="amt-${idx}">${amount > 0 ? formatCurrency(amount) : '—'}</td>
         `;
         tbody.appendChild(tr);
@@ -443,29 +454,37 @@ function updateConfigItem(el) {
     const field = el.dataset.field;
     configItems[idx][field] = parseFloat(el.value) || 0;
     
-    const amount = configItems[idx].qty * configItems[idx].rate;
+    const effectiveRate = Math.max(0, configItems[idx].rate - configItems[idx].discount);
+    const amount = configItems[idx].qty * effectiveRate;
     document.getElementById(`amt-${idx}`).textContent = amount > 0 ? formatCurrency(amount) : '—';
     recalcTotal();
 }
 
 function recalcTotal() {
-    let total = 0;
-    let totalPoints = 0;
+    let grossTotal = 0;
+    let totalDiscount = 0;
     configItems.forEach(item => {
-        total += item.qty * item.rate;
-        totalPoints += item.qty;
+        const effectiveRate = Math.max(0, item.rate - item.discount);
+        grossTotal += item.qty * item.rate;
+        totalDiscount += item.qty * item.discount;
     });
-    document.getElementById('config-total').textContent = formatCurrency(total);
+    const netTotal = grossTotal - totalDiscount;
+    document.getElementById('config-total').textContent = formatCurrency(Math.max(0, netTotal));
     
-    // Discount calculation
-    const discPerPoint = parseFloat(document.getElementById('inp-discount').value) || 0;
-    const totalDiscount = discPerPoint * totalPoints;
-    const discPct = total > 0 ? ((totalDiscount / total) * 100).toFixed(1) : 0;
-    const netTotal = total - totalDiscount;
-    
+    // Update discount summary section
+    const discPct = grossTotal > 0 ? ((totalDiscount / grossTotal) * 100).toFixed(1) : 0;
     document.getElementById('total-discount-display').value = formatCurrency(totalDiscount);
     document.getElementById('discount-pct-display').value = discPct + '%';
     document.getElementById('net-total-display').value = formatCurrency(Math.max(0, netTotal));
+}
+
+// Apply global discount to ALL rows
+function applyGlobalDiscount() {
+    const discVal = parseFloat(document.getElementById('inp-discount').value) || 0;
+    configItems.forEach((item, idx) => {
+        item.discount = discVal;
+    });
+    renderPointsTable(); // Re-render with updated discounts
 }
 
 // ====== STEP 3: GENERATE QUOTATION & PDF PREVIEW ======
@@ -505,13 +524,15 @@ function generateQuotation() {
     boqTbody.innerHTML = '';
     
     let grossTotal = 0;
-    let totalPoints = 0;
+    let totalDiscount = 0;
     
     activeItems.forEach((item, idx) => {
         const totalQty = item.qty * units;
-        const amount = totalQty * item.rate;
-        grossTotal += amount;
-        totalPoints += totalQty;
+        const itemDisc = item.discount || 0;
+        const effectiveRate = Math.max(0, item.rate - itemDisc);
+        const amount = totalQty * effectiveRate;
+        grossTotal += totalQty * item.rate;
+        totalDiscount += totalQty * itemDisc;
         
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -520,16 +541,15 @@ function generateQuotation() {
             <td class="text-center">${item.unit}</td>
             <td class="text-right">₹${item.rate.toLocaleString('en-IN')}</td>
             <td class="text-center font-bold">${totalQty}${units > 1 ? ` (${item.qty}×${units})` : ''}</td>
+            <td class="text-right" style="color:#d97706;">${itemDisc > 0 ? '₹' + itemDisc.toLocaleString('en-IN') : '—'}</td>
             <td class="text-right font-mono font-bold">${formatCurrency(amount)}</td>
         `;
         boqTbody.appendChild(tr);
     });
     
-    // Discount calculation
-    const discPerPoint = parseFloat(document.getElementById('inp-discount').value) || 0;
-    const totalDiscount = discPerPoint * totalPoints;
-    const discPct = grossTotal > 0 ? ((totalDiscount / grossTotal) * 100).toFixed(1) : 0;
+    // Discount summary
     const grandTotal = Math.max(0, grossTotal - totalDiscount);
+    const discPct = grossTotal > 0 ? ((totalDiscount / grossTotal) * 100).toFixed(1) : 0;
     
     // Show/hide discount box in PDF
     const discBox = document.getElementById('pdf-discount-box');
@@ -599,7 +619,8 @@ function downloadPDF() {
         filename: `AMPEdge_Solution_Quotation_${client.replace(/\s+/g,'_')}.pdf`,
         image: { type:'jpeg', quality:0.98 },
         html2canvas: { scale:2, useCORS:true, letterRendering:true },
-        jsPDF: { unit:'mm', format:'a4', orientation:'portrait' }
+        jsPDF: { unit:'mm', format:'a4', orientation:'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'], before: '.pdf-page' }
     }).from(el).save().then(() => {
         btn.innerHTML = orig;
         btn.disabled = false;

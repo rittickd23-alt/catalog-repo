@@ -94,6 +94,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text);
 .generate-btn{background:linear-gradient(135deg,#0ea5e9,#3b82f6);color:#fff;border:none;padding:16px 50px;border-radius:12px;font-size:1.05rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:12px;transition:all .25s;box-shadow:0 4px 15px var(--blue-glow);}
 .generate-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px var(--blue-glow);}
 .key-hint{background:rgba(255,255,255,.15);padding:3px 8px;border-radius:4px;font-size:.7rem;font-weight:500;}
+.apply-all-btn{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;padding:10px 18px;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .2s;white-space:nowrap;}
+.apply-all-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(245,158,11,.4);}
+.config-points-table td input.disc-input{text-align:center;color:#f59e0b;font-weight:600;}
 
 /* ===========================================
    STEP 3 — Preview & Download
@@ -113,7 +116,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text);
 /* ===========================================
    PDF PAGES (White A4 Styling)
    =========================================== */
-.pdf-page{width:210mm;min-height:297mm;background:#fff;color:#1e293b;box-shadow:0 10px 30px rgba(0,0,0,.4);padding:15mm;display:flex;flex-direction:column;position:relative;page-break-after:always;}
+.pdf-page{width:210mm;min-height:297mm;background:#fff;color:#1e293b;box-shadow:0 10px 30px rgba(0,0,0,.4);padding:15mm;display:flex;flex-direction:column;position:relative;}
 .pdf-brand-header{border-bottom:2px solid #0284c7;padding-bottom:12px;margin-bottom:25px;display:flex;justify-content:space-between;align-items:flex-end;}
 .pdf-brand-left{display:flex;align-items:center;gap:10px;}
 .pdf-logo-img{height:45px;object-fit:contain;}
