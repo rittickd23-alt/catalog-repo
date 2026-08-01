@@ -450,8 +450,22 @@ function updateConfigItem(el) {
 
 function recalcTotal() {
     let total = 0;
-    configItems.forEach(item => { total += item.qty * item.rate; });
+    let totalPoints = 0;
+    configItems.forEach(item => {
+        total += item.qty * item.rate;
+        totalPoints += item.qty;
+    });
     document.getElementById('config-total').textContent = formatCurrency(total);
+    
+    // Discount calculation
+    const discPerPoint = parseFloat(document.getElementById('inp-discount').value) || 0;
+    const totalDiscount = discPerPoint * totalPoints;
+    const discPct = total > 0 ? ((totalDiscount / total) * 100).toFixed(1) : 0;
+    const netTotal = total - totalDiscount;
+    
+    document.getElementById('total-discount-display').value = formatCurrency(totalDiscount);
+    document.getElementById('discount-pct-display').value = discPct + '%';
+    document.getElementById('net-total-display').value = formatCurrency(Math.max(0, netTotal));
 }
 
 // ====== STEP 3: GENERATE QUOTATION & PDF PREVIEW ======
@@ -490,12 +504,14 @@ function generateQuotation() {
     const boqTbody = document.getElementById('pdf-boq-tbody');
     boqTbody.innerHTML = '';
     
-    let grandTotal = 0;
+    let grossTotal = 0;
+    let totalPoints = 0;
     
     activeItems.forEach((item, idx) => {
         const totalQty = item.qty * units;
         const amount = totalQty * item.rate;
-        grandTotal += amount;
+        grossTotal += amount;
+        totalPoints += totalQty;
         
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -509,13 +525,61 @@ function generateQuotation() {
         boqTbody.appendChild(tr);
     });
     
-    // Grand total
+    // Discount calculation
+    const discPerPoint = parseFloat(document.getElementById('inp-discount').value) || 0;
+    const totalDiscount = discPerPoint * totalPoints;
+    const discPct = grossTotal > 0 ? ((totalDiscount / grossTotal) * 100).toFixed(1) : 0;
+    const grandTotal = Math.max(0, grossTotal - totalDiscount);
+    
+    // Show/hide discount box in PDF
+    const discBox = document.getElementById('pdf-discount-box');
+    if (totalDiscount > 0) {
+        discBox.style.display = 'block';
+        document.getElementById('pdf-gross-total').textContent = formatCurrency(grossTotal);
+        document.getElementById('pdf-disc-pct').textContent = discPct;
+        document.getElementById('pdf-disc-amt').textContent = '-' + formatCurrency(totalDiscount);
+    } else {
+        discBox.style.display = 'none';
+    }
+    
+    // Grand total (after discount)
     document.getElementById('pdf-grand-total').textContent = formatCurrency(grandTotal);
     
-    // Payment milestones
-    document.getElementById('pdf-ms1').textContent = formatCurrency(grandTotal * 0.30);
-    document.getElementById('pdf-ms2').textContent = formatCurrency(grandTotal * 0.40);
-    document.getElementById('pdf-ms3').textContent = formatCurrency(grandTotal * 0.30);
+    // Editable Payment milestones
+    const ms1Pct = parseFloat(document.getElementById('inp-ms1-pct').value) || 0;
+    const ms2Pct = parseFloat(document.getElementById('inp-ms2-pct').value) || 0;
+    const ms3Pct = parseFloat(document.getElementById('inp-ms3-pct').value) || 0;
+    
+    document.getElementById('pdf-ms1-pct-cell').textContent = ms1Pct + '%';
+    document.getElementById('pdf-ms2-pct-cell').textContent = ms2Pct + '%';
+    document.getElementById('pdf-ms3-pct-cell').textContent = ms3Pct + '%';
+    document.getElementById('pdf-ms1-label').textContent = ms1Pct + '% of contract';
+    document.getElementById('pdf-ms2-label').textContent = 'Piping & wire pulling';
+    document.getElementById('pdf-ms3-label').textContent = 'Final testing & DB';
+    document.getElementById('pdf-ms1').textContent = formatCurrency(grandTotal * ms1Pct / 100);
+    document.getElementById('pdf-ms2').textContent = formatCurrency(grandTotal * ms2Pct / 100);
+    document.getElementById('pdf-ms3').textContent = formatCurrency(grandTotal * ms3Pct / 100);
+    
+    // Editable Terms & Conditions
+    const termsText = document.getElementById('inp-terms').value;
+    const termsList = document.getElementById('pdf-terms-list');
+    termsList.innerHTML = '';
+    termsText.split('\n').filter(line => line.trim()).forEach(line => {
+        const li = document.createElement('li');
+        // Remove leading bullet character if present
+        let text = line.trim();
+        if (text.startsWith('•') || text.startsWith('-') || text.startsWith('*')) {
+            text = text.substring(1).trim();
+        }
+        // Bold the part before the first colon
+        const colonIdx = text.indexOf(':');
+        if (colonIdx > 0 && colonIdx < 60) {
+            li.innerHTML = '<strong>' + text.substring(0, colonIdx + 1) + '</strong>' + text.substring(colonIdx + 1);
+        } else {
+            li.textContent = text;
+        }
+        termsList.appendChild(li);
+    });
     
     goToStep(3);
 }
@@ -532,7 +596,7 @@ function downloadPDF() {
     
     html2pdf().set({
         margin: 0,
-        filename: `AmpEdge_Quotation_${client.replace(/\s+/g,'_')}.pdf`,
+        filename: `AMPEdge_Solution_Quotation_${client.replace(/\s+/g,'_')}.pdf`,
         image: { type:'jpeg', quality:0.98 },
         html2canvas: { scale:2, useCORS:true, letterRendering:true },
         jsPDF: { unit:'mm', format:'a4', orientation:'portrait' }
